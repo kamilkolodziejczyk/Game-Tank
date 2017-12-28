@@ -151,7 +151,7 @@ void World::addTerrains()
      addTerrain(Terrain::Brick, 300.f, -100.f);
     addTerrain(Terrain::Steel, 530.f, -330.f);
      addTerrain(Terrain::Brick, 400.f, -100.f);
-    addTerrain(Terrain::Steel, 630.f, -330.f);
+    addTerrain(Terrain::Steel, 800.f, -330.f);
 
     std::sort(mTerrainSpawnPoints.begin(), mTerrainSpawnPoints.end(), [] (SpawnPointTerrain lhs, SpawnPointTerrain rhs)
               {
@@ -228,6 +228,60 @@ void World::handleCollisions()
 			tank.damage(projectile.getDamage());
 			projectile.destroy();
 		}
+		else if(matchesCategories(pair, Category::AlliedProjectile, Category::Brick))
+        {
+            auto& brick = static_cast<Terrain&>(*pair.first);
+            auto& projectile = static_cast<Projectile&>(*pair.second);
+
+
+            brick.destroy();
+            projectile.destroy();
+        }
+        else if(matchesCategories(pair, Category::AlliedProjectile, Category::Steel))
+        {
+            auto& steel = static_cast<Terrain&>(*pair.first);
+            auto& projectile = static_cast<Projectile&>(*pair.second);
+
+
+            steel.destroy();
+            projectile.destroy();
+        }
+        else if(matchesCategories(pair, Category::Projectile, Category::Brick))
+        {
+            auto& brick = static_cast<Terrain&>(*pair.first);
+            auto& projectile = static_cast<Projectile&>(*pair.second);
+
+
+            brick.destroy();
+            projectile.destroy();
+        }
+        else if(matchesCategories(pair, Category::Projectile, Category::Steel))
+        {
+            auto& steel = static_cast<Terrain&>(*pair.first);
+            auto& projectile = static_cast<Projectile&>(*pair.second);
+
+
+            steel.destroy();
+            projectile.destroy();
+        }
+        else if(matchesCategories(pair, Category::EnemyProjectile, Category::Brick))
+        {
+            auto& brick = static_cast<Terrain&>(*pair.first);
+            auto& projectile = static_cast<Tank&>(*pair.second);
+
+
+            brick.destroy();
+            projectile.destroy();
+        }
+        else if(matchesCategories(pair, Category::EnemyProjectile, Category::Steel))
+        {
+            auto& steel = static_cast<Terrain&>(*pair.first);
+            auto& projectile = static_cast<Tank&>(*pair.second);
+
+
+            steel.destroy();
+            projectile.destroy();
+        }
 	}
 }
 
