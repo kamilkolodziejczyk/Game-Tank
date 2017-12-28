@@ -14,9 +14,13 @@ namespace Category
 		Pickup				    = 1 << 4,
 		AlliedProjectile	    = 1 << 5,
 		EnemyProjectile		    = 1 << 6,
+		Brick                   = 1 << 7,
+		Steel                   = 1 << 8,
 
 		Tank= PlayerTank | AlliedTank | EnemyTank,
 		Projectile = AlliedProjectile | EnemyProjectile,
+		Terrain = Brick | Steel,
+
 	};
 }
 

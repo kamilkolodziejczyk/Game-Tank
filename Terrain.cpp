@@ -1,0 +1,40 @@
+#include "Terrain.hpp"
+#include <SFML/Graphics/RenderTarget.hpp>
+#include "DataTables.hpp"
+#include "Category.hpp"
+#include "CommandQueue.hpp"
+#include "Utility.hpp"
+#include "ResourceHolder.hpp"
+
+namespace
+{
+	const std::vector<TerrainData> Table = initializeTerrainData();
+}
+
+
+Terrain::Terrain(Type type, const TextureHolder& textures)
+: Entity(1)
+, mType(type)
+, mSprite(textures.get(Table[type].texture))
+{
+	centerOrigin(mSprite);
+}
+
+
+unsigned int Terrain::getCategory() const
+{
+    if(mType == Brick)
+        return Category::Brick;
+	else
+        return Category::Steel;
+}
+
+sf::FloatRect Terrain::getBoundingRect() const
+{
+	return getWorldTransform().transformRect(mSprite.getGlobalBounds());
+}
+
+void Terrain::drawCurrent(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	target.draw(mSprite, states);
+}

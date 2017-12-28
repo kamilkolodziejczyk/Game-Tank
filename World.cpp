@@ -49,6 +49,8 @@ void World::update(sf::Time dt)
 	adaptPlayerPosition();
 
 	spawnEnemies();
+
+	spawnTerrains();
 }
 
 void World::draw()
@@ -75,10 +77,15 @@ void World::loadTextures()
 	mTextures.load(Textures::Bullet, "Media/Textures/Bullet.png");
 	mTextures.load(Textures::Missile, "Media/Textures/Missile.png");
 
+	mTextures.load(Textures::Brick, "Media/Textures/Brick.png");
+	mTextures.load(Textures::Steel, "Media/Textures/Steel.png");
+
 	mTextures.load(Textures::HealthRefill, "Media/Textures/HealthRefill.png");
 	mTextures.load(Textures::MissileRefill, "Media/Textures/MissileRefill.png");
 	mTextures.load(Textures::FireSpread, "Media/Textures/FireSpread.png");
 	mTextures.load(Textures::FireRate, "Media/Textures/FireRate.png");
+
+
 }
 
 void World::buildScene()
@@ -111,8 +118,11 @@ void World::buildScene()
 	mPlayerTank->setVelocity(40.f, 40.f);
 	mSceneLayers[Ground]->attachChild(std::move(player));
 
+    addTerrains();
+
 	// Add enemy tank
 	addEnemies();
+
 
 }
 
@@ -132,10 +142,32 @@ void World::addEnemies()
 	});
 }
 
+void World::addTerrains()
+{
+    addTerrain(Terrain::Brick, 100.f, -100.f);
+    addTerrain(Terrain::Steel, 330.f, -330.f);
+     addTerrain(Terrain::Brick, 200.f, -100.f);
+    addTerrain(Terrain::Steel, 430.f, -330.f);
+     addTerrain(Terrain::Brick, 300.f, -100.f);
+    addTerrain(Terrain::Steel, 530.f, -330.f);
+     addTerrain(Terrain::Brick, 400.f, -100.f);
+    addTerrain(Terrain::Steel, 630.f, -330.f);
+
+    std::sort(mTerrainSpawnPoints.begin(), mTerrainSpawnPoints.end(), [] (SpawnPointTerrain lhs, SpawnPointTerrain rhs)
+              {
+                  return lhs.y < rhs.y;
+              });
+}
+
 void World::addEnemy(Tank::Type type, float relX, float relY)
 {
 	SpawnPoint spawn(type, mSpawnPosition.x + relX, mSpawnPosition.y - relY);
 	mEnemySpawnPoints.push_back(spawn);
+}
+void World::addTerrain(Terrain::Type type, float relX, float relY)
+{
+    SpawnPointTerrain spawn(type, mTerrainSpawnPosition.x + relX, mTerrainSpawnPosition.y - relY);
+    mTerrainSpawnPoints.push_back(spawn);
 }
 
 bool matchesCategories(SceneNode::Pair& colliders, Category::Type type1, Category::Type type2)
@@ -245,6 +277,22 @@ void World::spawnEnemies()
 
 		// Enemy is spawned, remove from the list to spawn
 		mEnemySpawnPoints.pop_back();
+	}
+}
+void World::spawnTerrains()
+{
+    while (!mTerrainSpawnPoints.empty()
+		&& mTerrainSpawnPoints.back().y > getBattlefieldBounds().top)
+	{
+		SpawnPointTerrain spawn = mTerrainSpawnPoints.back();
+
+		std::unique_ptr<Terrain> terra(new Terrain(spawn.type, mTextures));
+        terra->setPosition(spawn.x, spawn.y);
+        terra->setRotation(180.f);
+
+		mSceneLayers[Ground]->attachChild(std::move(terra));
+
+		mTerrainSpawnPoints.pop_back();
 	}
 }
 

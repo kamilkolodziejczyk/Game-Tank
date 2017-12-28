@@ -9,6 +9,7 @@
 #include "CommandQueue.hpp"
 #include "Command.hpp"
 #include "Tank.hpp"
+#include "Terrain.hpp"
 
 #include <SFML/System/NonCopyable.hpp>
 #include <SFML/Graphics/View.hpp>
@@ -47,8 +48,11 @@ class World : private sf::NonCopyable
 
 		void								buildScene();
 		void								addEnemies();
+		void                                addTerrains();
 		void								addEnemy(Tank::Type type, float relX, float relY);
+		void                                addTerrain(Terrain::Type type, float relX, float relY);
 		void								spawnEnemies();
+		void                                spawnTerrains();
 		void								destroyEntitiesOutsideView();
 		void								guideMissiles();
 		sf::FloatRect						getViewBounds() const;
@@ -75,6 +79,19 @@ class World : private sf::NonCopyable
 			float x;
 			float y;
 		};
+		struct SpawnPointTerrain
+		{
+			SpawnPointTerrain(Terrain::Type type, float x, float y)
+			: type(type)
+			, x(x)
+			, y(y)
+			{
+			}
+
+			Terrain::Type type;
+			float x;
+			float y;
+		};
 
 	private:
 		sf::RenderWindow&					mWindow;
@@ -88,9 +105,12 @@ class World : private sf::NonCopyable
 
 		sf::FloatRect						mWorldBounds;
 		sf::Vector2f						mSpawnPosition;
+		sf::Vector2f                        mTerrainSpawnPosition;
 		Tank*							    mPlayerTank;
+		Terrain* 						    mTerrain;
 
 		std::vector<SpawnPoint>				mEnemySpawnPoints;
+		std::vector<SpawnPointTerrain>      mTerrainSpawnPoints;
 		std::vector<Tank*>				    mActiveEnemies;
 };
 

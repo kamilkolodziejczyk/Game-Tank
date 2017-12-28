@@ -2,6 +2,7 @@
 #include "Tank.hpp"
 #include "Projectile.hpp"
 #include "Pickup.hpp"
+#include "Terrain.hpp"
 
 
 // For std::bind() placeholders _1, _2, ...
@@ -76,4 +77,13 @@ std::vector<PickupData> initializePickupData()
 	data[Pickup::FireRate].action = std::bind(&Tank::increaseFireRate, _1);
 
 	return data;
+}
+std::vector<TerrainData> initializeTerrainData()
+{
+    std::vector<TerrainData> data(Terrain::TypeCount);
+    data[Terrain::Brick].texture = Textures::Brick;
+    data[Terrain::Steel].texture = Textures::Steel;
+
+    return data;
+
 }

@@ -17,11 +17,14 @@ namespace Textures
 		Bullet,
 		Missile,
 		Desert,
+		Brick,
+		Steel,
 		HealthRefill,
 		MissileRefill,
 		FireRate,
 		FireSpread,
 		TitleScreen,
+
 	};
 }
 

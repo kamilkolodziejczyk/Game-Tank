@@ -46,10 +46,14 @@ struct PickupData
 	std::function<void(Tank&)>	    action;
 	Textures::ID					texture;
 };
-
+struct TerrainData
+{
+	Textures::ID					texture;
+};
 
 std::vector<TankData>	    initializeTankData();
 std::vector<ProjectileData>	initializeProjectileData();
 std::vector<PickupData>		initializePickupData();
+std::vector<TerrainData>    initializeTerrainData();
 
 #endif // DATATABLES_HPP_INCLUDED
