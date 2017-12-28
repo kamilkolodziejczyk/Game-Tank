@@ -72,12 +72,13 @@ void World::loadTextures()
 {
 	mTextures.load(Textures::Tank1, "Media/Textures/Tank.png");
 	mTextures.load(Textures::Desert, "Media/Textures/Desert.png");
-	mTextures.load(Textures::Tank2, "Media/Textures/Tank.png");
+	mTextures.load(Textures::Tank2, "Media/Textures/enemy.png");
 
 	mTextures.load(Textures::Bullet, "Media/Textures/Bullet.png");
 	mTextures.load(Textures::Missile, "Media/Textures/Missile.png");
 
 	mTextures.load(Textures::Brick, "Media/Textures/Brick.png");
+	mTextures.load(Textures::Eagle, "Media/Textures/Eagle.png");
 	mTextures.load(Textures::Steel, "Media/Textures/Steel.png");
 
 	mTextures.load(Textures::HealthRefill, "Media/Textures/HealthRefill.png");
@@ -146,12 +147,23 @@ void World::addTerrains()
 {
     addTerrain(Terrain::Brick, 100.f, -100.f);
     addTerrain(Terrain::Steel, 330.f, -330.f);
-     addTerrain(Terrain::Brick, 200.f, -100.f);
+     addTerrain(Terrain::Brick, 100.f, -132.f);
     addTerrain(Terrain::Steel, 430.f, -330.f);
-     addTerrain(Terrain::Brick, 300.f, -100.f);
+     addTerrain(Terrain::Brick, 132.f, -132.f);
     addTerrain(Terrain::Steel, 530.f, -330.f);
      addTerrain(Terrain::Brick, 400.f, -100.f);
-    addTerrain(Terrain::Steel, 800.f, -330.f);
+    addTerrain(Terrain::Eagle, 683.f, -736.f);
+     addTerrain(Terrain::Brick, 619.f, -736.f);
+      addTerrain(Terrain::Brick, 619.f, -704.f);
+       addTerrain(Terrain::Brick, 619.f, -672.f);
+        addTerrain(Terrain::Brick, 651.f, -672.f);
+       addTerrain(Terrain::Brick, 683.f, -672.f);
+        addTerrain(Terrain::Brick, 715.f, -672.f);
+        addTerrain(Terrain::Brick, 747.f, -672.f);
+         addTerrain(Terrain::Brick, 747.f, -704.f);
+          addTerrain(Terrain::Brick, 747.f, -736.f);
+
+
 
     std::sort(mTerrainSpawnPoints.begin(), mTerrainSpawnPoints.end(), [] (SpawnPointTerrain lhs, SpawnPointTerrain rhs)
               {
@@ -228,7 +240,7 @@ void World::handleCollisions()
 			tank.damage(projectile.getDamage());
 			projectile.destroy();
 		}
-		else if(matchesCategories(pair, Category::AlliedProjectile, Category::Brick))
+		else if(matchesCategories(pair,  Category::Brick,Category::AlliedProjectile)|| matchesCategories(pair,Category::Eagle,Category::AlliedProjectile ))
         {
             auto& brick = static_cast<Terrain&>(*pair.first);
             auto& projectile = static_cast<Projectile&>(*pair.second);
@@ -237,16 +249,7 @@ void World::handleCollisions()
             brick.destroy();
             projectile.destroy();
         }
-        else if(matchesCategories(pair, Category::AlliedProjectile, Category::Steel))
-        {
-            auto& steel = static_cast<Terrain&>(*pair.first);
-            auto& projectile = static_cast<Projectile&>(*pair.second);
-
-
-            steel.destroy();
-            projectile.destroy();
-        }
-        else if(matchesCategories(pair, Category::Projectile, Category::Brick))
+        else if(matchesCategories(pair, Category::Brick, Category::Projectile)  || matchesCategories(pair, Category::Eagle,Category::Projectile ))
         {
             auto& brick = static_cast<Terrain&>(*pair.first);
             auto& projectile = static_cast<Projectile&>(*pair.second);
@@ -255,31 +258,23 @@ void World::handleCollisions()
             brick.destroy();
             projectile.destroy();
         }
-        else if(matchesCategories(pair, Category::Projectile, Category::Steel))
-        {
-            auto& steel = static_cast<Terrain&>(*pair.first);
-            auto& projectile = static_cast<Projectile&>(*pair.second);
 
-
-            steel.destroy();
-            projectile.destroy();
-        }
-        else if(matchesCategories(pair, Category::EnemyProjectile, Category::Brick))
+        else if(matchesCategories(pair, Category::Brick, Category::EnemyProjectile)  || matchesCategories(pair, Category::Eagle,Category::EnemyProjectile ))
         {
             auto& brick = static_cast<Terrain&>(*pair.first);
-            auto& projectile = static_cast<Tank&>(*pair.second);
+            auto& projectile = static_cast<Projectile&>(*pair.second);
 
 
             brick.destroy();
             projectile.destroy();
         }
-        else if(matchesCategories(pair, Category::EnemyProjectile, Category::Steel))
+         else if(matchesCategories(pair, Category::EnemyProjectile, Category::Steel)  || matchesCategories(pair,Category::Projectile, Category::Steel )  || matchesCategories(pair,Category::AlliedProjectile, Category::Steel ))
         {
-            auto& steel = static_cast<Terrain&>(*pair.first);
-            auto& projectile = static_cast<Tank&>(*pair.second);
+            auto& projectile = static_cast<Projectile&>(*pair.first);
+            auto& steel = static_cast<Terrain&>(*pair.second);
 
 
-            steel.destroy();
+
             projectile.destroy();
         }
 	}
@@ -342,7 +337,7 @@ void World::spawnTerrains()
 
 		std::unique_ptr<Terrain> terra(new Terrain(spawn.type, mTextures));
         terra->setPosition(spawn.x, spawn.y);
-        terra->setRotation(180.f);
+
 
 		mSceneLayers[Ground]->attachChild(std::move(terra));
 

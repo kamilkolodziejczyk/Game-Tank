@@ -25,8 +25,10 @@ unsigned int Terrain::getCategory() const
 {
     if(mType == Brick)
         return Category::Brick;
-	else
+	else if(mType == Steel)
         return Category::Steel;
+    else if(mType == Eagle)
+        return Category::Eagle;
 }
 
 sf::FloatRect Terrain::getBoundingRect() const

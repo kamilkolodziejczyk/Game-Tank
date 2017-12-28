@@ -16,6 +16,7 @@ public:
     enum Type{
         Brick,
         Steel,
+        Eagle,
         TypeCount,
         };
 public:

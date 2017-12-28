@@ -24,6 +24,7 @@ namespace Textures
 		FireRate,
 		FireSpread,
 		TitleScreen,
+		Eagle,
 
 	};
 }
@@ -35,13 +36,34 @@ namespace Fonts
 		Main,
 	};
 }
-
+namespace Music
+{
+	enum ID
+	{
+		MenuTheme,
+		MissionTheme,
+	};
+}
+namespace SoundEffect
+{
+	enum ID
+	{
+		AlliedGunfire,
+		EnemyGunfire,
+		Explosion1,
+		Explosion2,
+		LaunchMissile,
+		CollectPickup,
+		Button,
+	};
+}
 // Forward declaration and a few type definitions
 template <typename Resource, typename Identifier>
 class ResourceHolder;
 
 typedef ResourceHolder<sf::Texture, Textures::ID> TextureHolder;
 typedef ResourceHolder<sf::Font, Fonts::ID>			FontHolder;
+
 
 
 #endif // RESOURCEIDENTIFIERS_HPP_INCLUDED

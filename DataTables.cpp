@@ -83,6 +83,7 @@ std::vector<TerrainData> initializeTerrainData()
     std::vector<TerrainData> data(Terrain::TypeCount);
     data[Terrain::Brick].texture = Textures::Brick;
     data[Terrain::Steel].texture = Textures::Steel;
+    data[Terrain::Eagle].texture = Textures::Eagle;
 
     return data;
 

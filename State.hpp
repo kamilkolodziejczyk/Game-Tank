@@ -8,6 +8,7 @@
 #include <SFML/System/Time.hpp>
 #include <SFML/Window/Event.hpp>
 
+
 #include <memory>
 
 
@@ -18,6 +19,7 @@ namespace sf
 
 class StateStack;
 class Player;
+class MusicPlayer;
 
 class State
 {
@@ -32,6 +34,8 @@ class State
 			TextureHolder*		textures;
 			FontHolder*			fonts;
 			Player*				player;
+			MusicPlayer*		music;
+
 		};
 
 
