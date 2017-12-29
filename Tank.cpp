@@ -330,3 +330,4 @@ void Tank::setDirection()
     if(velocity.x!=0 || velocity.y!=0)
         mDirection=unitVector(velocity);
 }
+

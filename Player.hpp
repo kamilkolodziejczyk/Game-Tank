@@ -42,6 +42,7 @@ class Player
 
         void 					setMissionStatus(MissionStatus status);
 		MissionStatus 			getMissionStatus() const;
+		int                     getDirection();
 
 
 	private:
@@ -53,6 +54,7 @@ class Player
 		std::map<sf::Keyboard::Key, Action>		mKeyBinding;
 		std::map<Action, Command>				mActionBinding;
 		MissionStatus 							mCurrentMissionStatus;
+		int                                     direction;
 };
 
 

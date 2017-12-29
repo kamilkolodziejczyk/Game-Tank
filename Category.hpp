@@ -17,6 +17,7 @@ namespace Category
 		Brick                   = 1 << 7,
 		Steel                   = 1 << 8,
 		Eagle                   = 1 << 9,
+		SoundEffect             = 1 << 10,
 
 		Tank= PlayerTank | AlliedTank | EnemyTank,
 		Projectile = AlliedProjectile | EnemyProjectile,

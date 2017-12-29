@@ -128,3 +128,7 @@ Player::MissionStatus Player::getMissionStatus() const
 {
 	return mCurrentMissionStatus;
 }
+int Player::getDirection()
+{
+    return direction;
+}

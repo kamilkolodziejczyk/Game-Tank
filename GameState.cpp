@@ -7,6 +7,8 @@ GameState::GameState(StateStack& stack, Context context)
 , mPlayer(*context.player)
 {
 	mPlayer.setMissionStatus(Player::MissionRunning);
+
+	context.music->play(Music::MissionTheme);
 }
 
 void GameState::draw()

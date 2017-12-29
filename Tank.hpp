@@ -31,6 +31,7 @@ class Tank : public Entity
 		float					getMaxSpeed() const;
 		void                    setDirection();
 
+
 		void					increaseFireRate();
 		void					increaseSpread();
 		void					collectMissiles(unsigned int count);

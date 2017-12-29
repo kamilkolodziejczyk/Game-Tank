@@ -2,6 +2,7 @@
 #include "SpriteNode.hpp"
 #include "Projectile.hpp"
 #include "Pickup.hpp"
+#include "Utility.hpp"
 #include "TextNode.hpp"
 #include <SFML/Graphics/RenderWindow.hpp>
 
@@ -24,6 +25,7 @@ World::World(sf::RenderWindow& window, FontHolder& fonts)
 
 	// Prepare the view
 	mWorldView.setCenter(mSpawnPosition);
+
 }
 
 void World::update(sf::Time dt)
@@ -276,6 +278,17 @@ void World::handleCollisions()
 
 
             projectile.destroy();
+        }
+
+         else if(matchesCategories(pair, Category::PlayerTank, Category::Steel) || matchesCategories(pair,Category::PlayerTank, Category::Brick) || matchesCategories(pair,Category::PlayerTank, Category::Eagle))
+        {
+           auto& player = static_cast<Tank&>(*pair.first);
+           auto& terrain = static_cast<Terrain&>(*pair.second);
+
+
+
+
+
         }
 	}
 }

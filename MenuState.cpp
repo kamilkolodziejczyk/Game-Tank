@@ -32,6 +32,8 @@ MenuState::MenuState(StateStack& stack, Context context)
 	mOptions.push_back(exitOption);
 
 	updateOptionText();
+
+	context.music->play(Music::MenuTheme);
 }
 
 void MenuState::draw()

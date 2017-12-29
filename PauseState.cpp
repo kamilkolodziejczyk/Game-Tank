@@ -26,6 +26,9 @@ PauseState::PauseState(StateStack& stack, Context context)
 	mInstructionText.setString("(Press Backspace to return to the main menu)");
 	centerOrigin(mInstructionText);
 	mInstructionText.setPosition(0.5f * viewSize.x, 0.6f * viewSize.y);
+
+    getContext().music->setPaused(true);
+
 }
 
 void PauseState::draw()
@@ -67,3 +70,8 @@ bool PauseState::handleEvent(const sf::Event& event)
 
 	return false;
 }
+PauseState::~PauseState()
+{
+	getContext().music->setPaused(false);
+}
+
