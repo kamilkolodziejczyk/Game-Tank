@@ -45,6 +45,8 @@ class World : private sf::NonCopyable
         void								handleCollisions();
 		void								adaptPlayerPosition();
 		void								adaptPlayerVelocity();
+		void                                adaptPlayerPosition(Terrain &terr);
+		void                                adaptPlayerPosition(Tank &tank);
 
 		void								buildScene();
 		void								addEnemies();

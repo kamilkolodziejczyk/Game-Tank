@@ -16,15 +16,13 @@ std::vector<TankData> initializeTankData()
 	data[Tank::Tank1].speed = 200.f;
 	data[Tank::Tank1].fireInterval = sf::seconds(1);
 	data[Tank::Tank1].texture = Textures::Tank1;
-	data[Tank::Tank1].directions.push_back(Direction(0, 100));
+	data[Tank::Tank1].distance=400;
 
 	data[Tank::Tank2].hitpoints = 20;
 	data[Tank::Tank2].speed = 80.f;
 	data[Tank::Tank2].texture = Textures::Tank2;
-    data[Tank::Tank2].directions.push_back(Direction(0, 200));
-    data[Tank::Tank2].directions.push_back(Direction(90, 200));
-    data[Tank::Tank2].directions.push_back(Direction(180, 200));
-    data[Tank::Tank2].directions.push_back(Direction(270, 200));
+    data[Tank::Tank2].distance =300;
+
 
 	data[Tank::Tank2].fireInterval = sf::seconds(1.f);
 /*

@@ -25,12 +25,14 @@ class Tank : public Entity
 	public:
                                 Tank(Type type, const TextureHolder& textures, const FontHolder& fonts);
         virtual unsigned int	getCategory() const;
+        Type                    getType()const;
         virtual sf::FloatRect	getBoundingRect() const;
 		virtual bool 			isMarkedForRemoval() const;
 		bool					isAllied() const;
 		float					getMaxSpeed() const;
 		void                    setDirection();
-
+		sf::Vector2f            getDirection() const;
+		void                    setTraveledDistance(float distance);
 
 		void					increaseFireRate();
 		void					increaseSpread();
@@ -70,7 +72,6 @@ class Tank : public Entity
 
 		Command 				mDropPickupCommand;
 		float					mTravelledDistance;
-		std::size_t				mDirectionIndex;
 		TextNode*				mHealthDisplay;
 		TextNode*				mMissileDisplay;
 };

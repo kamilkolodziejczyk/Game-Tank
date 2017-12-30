@@ -2,10 +2,9 @@
 #include "SpriteNode.hpp"
 #include "Projectile.hpp"
 #include "Pickup.hpp"
-#include "Utility.hpp"
 #include "TextNode.hpp"
 #include <SFML/Graphics/RenderWindow.hpp>
-
+#include <float.h>
 
 World::World(sf::RenderWindow& window, FontHolder& fonts)
 : mWindow(window)
@@ -25,7 +24,6 @@ World::World(sf::RenderWindow& window, FontHolder& fonts)
 
 	// Prepare the view
 	mWorldView.setCenter(mSpawnPosition);
-
 }
 
 void World::update(sf::Time dt)
@@ -48,6 +46,7 @@ void World::update(sf::Time dt)
 
 	// Regular update step, adapt position (correct if outside view)
 	mSceneGraph.update(dt,mCommandQueue);
+	adaptPlayerPosition(*mPlayerTank);
 	adaptPlayerPosition();
 
 	spawnEnemies();
@@ -242,7 +241,8 @@ void World::handleCollisions()
 			tank.damage(projectile.getDamage());
 			projectile.destroy();
 		}
-		else if(matchesCategories(pair,  Category::Brick,Category::AlliedProjectile)|| matchesCategories(pair,Category::Eagle,Category::AlliedProjectile ))
+		else if(matchesCategories(pair,  Category::Brick,Category::AlliedProjectile)
+          || matchesCategories(pair,Category::Eagle,Category::AlliedProjectile ))
         {
             auto& brick = static_cast<Terrain&>(*pair.first);
             auto& projectile = static_cast<Projectile&>(*pair.second);
@@ -251,7 +251,8 @@ void World::handleCollisions()
             brick.destroy();
             projectile.destroy();
         }
-        else if(matchesCategories(pair, Category::Brick, Category::Projectile)  || matchesCategories(pair, Category::Eagle,Category::Projectile ))
+        else if(matchesCategories(pair, Category::Brick, Category::Projectile)
+                || matchesCategories(pair, Category::Eagle,Category::Projectile ))
         {
             auto& brick = static_cast<Terrain&>(*pair.first);
             auto& projectile = static_cast<Projectile&>(*pair.second);
@@ -261,7 +262,8 @@ void World::handleCollisions()
             projectile.destroy();
         }
 
-        else if(matchesCategories(pair, Category::Brick, Category::EnemyProjectile)  || matchesCategories(pair, Category::Eagle,Category::EnemyProjectile ))
+        else if(matchesCategories(pair, Category::Brick, Category::EnemyProjectile)
+                || matchesCategories(pair, Category::Eagle,Category::EnemyProjectile ))
         {
             auto& brick = static_cast<Terrain&>(*pair.first);
             auto& projectile = static_cast<Projectile&>(*pair.second);
@@ -270,7 +272,9 @@ void World::handleCollisions()
             brick.destroy();
             projectile.destroy();
         }
-         else if(matchesCategories(pair, Category::EnemyProjectile, Category::Steel)  || matchesCategories(pair,Category::Projectile, Category::Steel )  || matchesCategories(pair,Category::AlliedProjectile, Category::Steel ))
+         else if(matchesCategories(pair, Category::EnemyProjectile, Category::Steel)
+                 || matchesCategories(pair,Category::Projectile, Category::Steel )
+                || matchesCategories(pair,Category::AlliedProjectile, Category::Steel ))
         {
             auto& projectile = static_cast<Projectile&>(*pair.first);
             auto& steel = static_cast<Terrain&>(*pair.second);
@@ -279,32 +283,66 @@ void World::handleCollisions()
 
             projectile.destroy();
         }
-
-         else if(matchesCategories(pair, Category::PlayerTank, Category::Steel) || matchesCategories(pair,Category::PlayerTank, Category::Brick) || matchesCategories(pair,Category::PlayerTank, Category::Eagle))
+        else if(matchesCategories(pair, Category::PlayerTank, Category::Steel)
+                 || matchesCategories(pair,Category::PlayerTank, Category::Brick )
+                || matchesCategories(pair,Category::PlayerTank, Category::Eagle ))
         {
-           auto& player = static_cast<Tank&>(*pair.first);
-           auto& terrain = static_cast<Terrain&>(*pair.second);
+            auto& player = static_cast<Tank&>(*pair.first);
+            auto& terr = static_cast<Terrain&>(*pair.second);
+
+            adaptPlayerPosition(terr);
 
 
+        }
+        else if(matchesCategories(pair, Category::EnemyTank, Category::Steel)
+                 || matchesCategories(pair,Category::EnemyTank, Category::Brick )
+                || matchesCategories(pair,Category::EnemyTank, Category::Eagle ))
+        {
+            auto& enemy = static_cast<Tank&>(*pair.first);
 
+
+            enemy.setTraveledDistance(FLT_MAX);
 
 
         }
 	}
 }
-
-void World::adaptPlayerPosition()
+void World::adaptPlayerPosition(Terrain &terr)
+{
+    sf::FloatRect terrainBounds=terr.getBoundingRect();
+    sf::Vector2f direction=mPlayerTank->getDirection();
+	sf::Vector2f position = mPlayerTank->getPosition();
+	sf::FloatRect playerBounds = mPlayerTank->getBoundingRect();
+	if(direction.x>0)
+        position.x=terrainBounds.left-playerBounds.width/2;
+	else if(direction.x<0)
+        position.x=terrainBounds.left+terrainBounds.width+playerBounds.width/2;
+	else if(direction.y<0)
+        position.y=terrainBounds.top+terrainBounds.height+playerBounds.height/2;
+    else if(direction.y>0)
+        position.y=terrainBounds.top-playerBounds.height/2;
+	mPlayerTank->setPosition(position);
+}
+void World::adaptPlayerPosition(Tank &tank)
 {
 	// Keep player's position inside the screen bounds, at least borderDistance units from the border
 	sf::FloatRect viewBounds(mWorldView.getCenter() - mWorldView.getSize() / 2.f, mWorldView.getSize());
 	const float borderDistance = 40.f;
 
-	sf::Vector2f position = mPlayerTank->getPosition();
+	sf::Vector2f position = tank.getPosition();
 	position.x = std::max(position.x, viewBounds.left + borderDistance);
 	position.x = std::min(position.x, viewBounds.left + viewBounds.width - borderDistance);
 	position.y = std::max(position.y, viewBounds.top + borderDistance);
 	position.y = std::min(position.y, viewBounds.top + viewBounds.height - borderDistance);
-	mPlayerTank->setPosition(position);
+	if(position.x==viewBounds.left + borderDistance||position.x==viewBounds.left + viewBounds.width - borderDistance
+    ||position.y== viewBounds.top + borderDistance||position.y==viewBounds.top + viewBounds.height - borderDistance)
+        tank.setTraveledDistance(FLT_MAX);
+	tank.setPosition(position);
+}
+void World::adaptPlayerPosition()
+{
+    for(Tank *ptr:mActiveEnemies)
+        adaptPlayerPosition(*ptr);
 }
 
 void World::adaptPlayerVelocity()

@@ -13,17 +13,13 @@
 
 class Tank;
 
-struct Direction
-{
-	Direction(float angle, float distance)
-	: angle(angle)
-	, distance(distance)
-	{
-	}
+enum direction{
+        Up,
+        Down,
+        Right,
+        Left,
+        };
 
-	float angle;
-	float distance;
-};
 
 struct TankData
 {
@@ -31,7 +27,7 @@ struct TankData
 	float							speed;
 	Textures::ID					texture;
 	sf::Time						fireInterval;
-	std::vector<Direction>			directions;
+	float                           distance;
 };
 
 struct ProjectileData

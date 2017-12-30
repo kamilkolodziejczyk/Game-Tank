@@ -32,7 +32,6 @@ Tank::Tank(Type type, const TextureHolder& textures, const FontHolder& fonts)
 , mMissileAmmo(2)
 , mDropPickupCommand()
 , mTravelledDistance(0.f)
-, mDirectionIndex(0)
 , mHealthDisplay(nullptr)
 , mDirection(0,-1)
 , mMissileDisplay(nullptr)
@@ -106,6 +105,10 @@ unsigned int Tank::getCategory() const
 	else
 		return Category::EnemyTank;
 }
+Tank::Type Tank:: getType()const
+{
+    return mType;
+}
 
 sf::FloatRect Tank::getBoundingRect() const
 {
@@ -159,56 +162,47 @@ void Tank::launchMissile()
 		--mMissileAmmo;
 	}
 }
-
+void Tank::setTraveledDistance(float distance)
+{
+    mTravelledDistance=distance;
+}
 void Tank::updateMovementPattern(sf::Time dt)
 {
 	// Enemy airplane: Movement pattern
-	if (isAllied())
+    if(!isAllied())
     {
 
-
-    }
-    else
-    {
-        const std::vector<Direction>& directions = Table[mType].directions;
-        if (!directions.empty())
-        {
             // Moved long enough in current direction: Change direction
-            if (mTravelledDistance > directions[mDirectionIndex].distance)
+            if (mTravelledDistance > Table[mType].distance)
             {
-                mDirectionIndex = (mDirectionIndex + 1) % directions.size();
+                switch(rand()%4)
+                {
+                case direction::Up:
+                    mDirection.x=0;
+                    mDirection.y=-1;
+                    break;
+                case direction::Down:
+                    mDirection.x=0;
+                    mDirection.y=1;
+                    break;
+                case direction::Left:
+                    mDirection.x=-1;
+                    mDirection.y=0;
+                    break;
+                case direction::Right:
+                    mDirection.x=1;
+                    mDirection.y=0;
+                    break;
+                }
                 mTravelledDistance = 0.f;
             }
 
             // Compute velocity from direction
-            float radians = toRadian(directions[mDirectionIndex].angle + 90.f);
-            float vx = getMaxSpeed() * std::cos(radians);
-            float vy = getMaxSpeed() * std::sin(radians);
-            if((vx<1 && vx>0) || (vx>-1 && vx<0))
-                vx=0;
-            if((vy<1&& vy>0) || (vy>-1 && vy<0))
-                vy=0;
-            /*switch((int)directions[mDirectionIndex].angle)
-            {
-                case 90:  mDirection.x=-1;
-                            mDirection.y=0;
-                            break;
-                case 180: mDirection.x=0;
-                            mDirection.y=-1;
-                            break;
-                case 270:  mDirection.x=1;
-                            mDirection.y=0;
-                            break;
-                case 0:   mDirection.x=0;
-                            mDirection.y=1;
-                            break;
-
-            }*/
-            setVelocity(vx, vy);
-            //setRotation(directions[mDirectionIndex].angle +180.f);
+            setVelocity(mDirection*getMaxSpeed());
             mTravelledDistance += getMaxSpeed() * dt.asSeconds();
-	}
     }
+
+
 
 }
 
@@ -330,4 +324,7 @@ void Tank::setDirection()
     if(velocity.x!=0 || velocity.y!=0)
         mDirection=unitVector(velocity);
 }
-
+sf::Vector2f Tank::getDirection()const
+{
+    return mDirection;
+}
