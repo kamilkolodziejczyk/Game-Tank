@@ -19,9 +19,11 @@ SoundPlayer::SoundPlayer()
 : mSoundBuffers()
 , mSounds()
 {
-	mSoundBuffers.load(SoundEffect::AlliedGunfire,	"Media/Audio/strzal.ogg");
-	mSoundBuffers.load(SoundEffect::LaunchMissile,	"Media/Audio/pickup.wav");
+	mSoundBuffers.load(SoundEffect::AlliedGunfire,	"Media/Audio/shot.wav");
+	mSoundBuffers.load(SoundEffect::LaunchMissile,	"Media/Audio/shot.wav");
 	mSoundBuffers.load(SoundEffect::CollectPickup,	"Media/Audio/pickup.wav");
+    mSoundBuffers.load(SoundEffect::EnemyGunfire,	"Media/Audio/strzal.wav");
+    mSoundBuffers.load(SoundEffect::Ride,	"Media/Audio/trzask.wav");
 
 
 	// Listener points towards the screen (default in SFML)

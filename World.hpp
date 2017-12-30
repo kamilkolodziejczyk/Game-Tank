@@ -10,6 +10,7 @@
 #include "Command.hpp"
 #include "Tank.hpp"
 #include "Terrain.hpp"
+#include "SoundPlayer.hpp"
 
 #include <SFML/System/NonCopyable.hpp>
 #include <SFML/Graphics/View.hpp>
@@ -28,7 +29,7 @@ namespace sf
 class World : private sf::NonCopyable
 {
 	public:
-		explicit							World(sf::RenderWindow& window, FontHolder &fonts);
+		explicit							World(sf::RenderWindow& window, FontHolder &fonts, SoundPlayer& sounds);
 		void								update(sf::Time dt);
 		void								draw();
 
@@ -47,7 +48,7 @@ class World : private sf::NonCopyable
 		void								adaptPlayerVelocity();
 		void                                adaptPlayerPosition(Terrain &terr);
 		void                                adaptPlayerPosition(Tank &tank);
-
+        void                                updateSounds();
 		void								buildScene();
 		void								addEnemies();
 		void                                addTerrains();
@@ -104,6 +105,7 @@ class World : private sf::NonCopyable
 		SceneNode							mSceneGraph;
 		std::array<SceneNode*, LayerCount>	mSceneLayers;
 		CommandQueue						mCommandQueue;
+		SoundPlayer&                        mSounds;
 
 		sf::FloatRect						mWorldBounds;
 		sf::Vector2f						mSpawnPosition;

@@ -5,6 +5,7 @@
 #include "CommandQueue.hpp"
 #include "ResourceHolder.hpp"
 #include <iostream>
+#include "SoundNode.hpp"
 
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
@@ -91,7 +92,8 @@ void Tank::updateCurrent(sf::Time dt, CommandQueue& commands)
 	checkProjectileLaunch(dt, commands);
 
 	// Update enemy movement pattern; apply velocity
-	updateMovementPattern(dt);
+	updateMovementPattern(dt, commands);
+
 	Entity::updateCurrent(dt, commands);
 
 	// Update texts
@@ -166,11 +168,12 @@ void Tank::setTraveledDistance(float distance)
 {
     mTravelledDistance=distance;
 }
-void Tank::updateMovementPattern(sf::Time dt)
+void Tank::updateMovementPattern(sf::Time dt, CommandQueue& commands)
 {
 	// Enemy airplane: Movement pattern
     if(!isAllied())
     {
+
 
             // Moved long enough in current direction: Change direction
             if (mTravelledDistance > Table[mType].distance)
@@ -199,6 +202,7 @@ void Tank::updateMovementPattern(sf::Time dt)
 
             // Compute velocity from direction
             setVelocity(mDirection*getMaxSpeed());
+
             mTravelledDistance += getMaxSpeed() * dt.asSeconds();
     }
 
@@ -223,6 +227,7 @@ void Tank::checkProjectileLaunch(sf::Time dt, CommandQueue& commands)
 	{
 		// Interval expired: We can fire a new bullet
 		commands.push(mFireCommand);
+		playLocalSound(commands, isAllied() ? SoundEffect::AlliedGunfire : SoundEffect::EnemyGunfire);
 		mFireCountdown += Table[mType].fireInterval / (mFireRateLevel + 1.f);
 		mIsFiring = false;
 	}
@@ -237,6 +242,7 @@ void Tank::checkProjectileLaunch(sf::Time dt, CommandQueue& commands)
 	if (mIsLaunchingMissile)
 	{
 		commands.push(mMissileCommand);
+		playLocalSound(commands, SoundEffect::LaunchMissile);
 		mIsLaunchingMissile = false;
 	}
 }
@@ -327,4 +333,19 @@ void Tank::setDirection()
 sf::Vector2f Tank::getDirection()const
 {
     return mDirection;
+}
+
+void Tank::playLocalSound(CommandQueue& commands, SoundEffect::ID effect)
+{
+	sf::Vector2f worldPosition = getWorldPosition();
+
+	Command command;
+	command.category = Category::SoundEffect;
+	command.action = derivedAction<SoundNode>(
+		[effect, worldPosition] (SoundNode& node, sf::Time)
+		{
+			node.playSound(effect, worldPosition);
+		});
+
+	commands.push(command);
 }

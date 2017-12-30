@@ -5,13 +5,15 @@
 #include "TextNode.hpp"
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <float.h>
+#include "SoundNode.hpp"
 
-World::World(sf::RenderWindow& window, FontHolder& fonts)
+World::World(sf::RenderWindow& window, FontHolder& fonts, SoundPlayer& sounds)
 : mWindow(window)
 , mWorldView(window.getDefaultView())
 , mFonts(fonts)
 , mTextures()
 , mSceneGraph()
+, mSounds(sounds)
 , mSceneLayers()
 , mWorldBounds(0.f, 0.f, mWorldView.getSize().x, 2000.f)
 , mSpawnPosition(mWorldView.getSize().x / 2.f,  mWorldView.getSize().y / 2.f)
@@ -52,6 +54,8 @@ void World::update(sf::Time dt)
 	spawnEnemies();
 
 	spawnTerrains();
+
+	updateSounds();
 }
 
 void World::draw()
@@ -113,6 +117,10 @@ void World::buildScene()
 	backgroundSprite->setPosition(mWorldBounds.left, mWorldBounds.top);
 	mSceneLayers[Background]->attachChild(std::move(backgroundSprite));
 
+
+    std::unique_ptr<SoundNode> soundNode(new SoundNode(mSounds));
+	mSceneGraph.attachChild(std::move(soundNode));
+
 	// Add player's Tank
 	std::unique_ptr<Tank> player(new Tank(Tank::Tank1, mTextures,mFonts));
 	mPlayerTank = player.get();
@@ -135,6 +143,10 @@ void World::addEnemies()
 	addEnemy(Tank::Tank2,  100.f, 200.f);
 
 	addEnemy(Tank::Tank2, 330.f, 330.f);
+
+	addEnemy(Tank::Tank2, 130.f, 330.f);
+	addEnemy(Tank::Tank2, 230.f, 330.f);
+	addEnemy(Tank::Tank2, 430.f, 330.f);
 
 
 	// Sort all enemies according to their y value, such that lower enemies are checked first for spawning
@@ -229,6 +241,7 @@ void World::handleCollisions()
 			// Apply pickup effect to player, destroy projectile
 			pickup.apply(player);
 			pickup.destroy();
+			player.playLocalSound(mCommandQueue, SoundEffect::CollectPickup);
 		}
 
 		else if (matchesCategories(pair, Category::EnemyTank, Category::AlliedProjectile)
@@ -306,6 +319,12 @@ void World::handleCollisions()
 
         }
 	}
+}
+void World::updateSounds()
+{
+    mSounds.setListenerPosition(mPlayerTank->getWorldPosition());
+
+    mSounds.removeStoppedSounds();
 }
 void World::adaptPlayerPosition(Terrain &terr)
 {

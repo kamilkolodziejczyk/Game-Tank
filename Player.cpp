@@ -102,6 +102,8 @@ void Player::initializeActions()
 	mActionBinding[MoveDown].action         = derivedAction<Tank>(TankMover(0.f, +playerSpeed));
     mActionBinding[Fire].action             = derivedAction<Tank>([] (Tank& a, sf::Time){ a.fire(); });
 	mActionBinding[LaunchMissile].action    = derivedAction<Tank>([] (Tank& a, sf::Time){ a.launchMissile(); });
+
+
 }
 
 bool Player::isRealtimeAction(Action action)
