@@ -178,24 +178,57 @@ void Tank::updateMovementPattern(sf::Time dt, CommandQueue& commands)
             // Moved long enough in current direction: Change direction
             if (mTravelledDistance > Table[mType].distance)
             {
+
                 switch(rand()%4)
                 {
-                case direction::Up:
-                    mDirection.x=0;
-                    mDirection.y=-1;
-                    break;
-                case direction::Down:
-                    mDirection.x=0;
-                    mDirection.y=1;
-                    break;
-                case direction::Left:
-                    mDirection.x=-1;
-                    mDirection.y=0;
-                    break;
-                case direction::Right:
-                    mDirection.x=1;
-                    mDirection.y=0;
-                    break;
+                    case direction::Up:
+                        if((int)mDirection.x!=0||(int)mDirection.y!=-1)
+                        {
+                            mDirection.x=0;
+                            mDirection.y=-1;
+                        }
+                        else
+                        {
+                            mDirection.x=0;
+                            mDirection.y=1;
+                        }
+                        break;
+                    case direction::Down:
+                        if((int)mDirection.x!=0||(int)mDirection.y!=1)
+                        {
+                            mDirection.x=0;
+                            mDirection.y=1;
+                        }
+                        else
+                        {
+                            mDirection.x=0;
+                            mDirection.y=-1;
+                        }
+                        break;
+                    case direction::Left:
+                        if((int)mDirection.x!=-1||(int)mDirection.y!=0)
+                        {
+                            mDirection.x=-1;
+                            mDirection.y=0;
+                        }
+                        else
+                        {
+                            mDirection.x=1;
+                            mDirection.y=0;
+                        }
+                        break;
+                    case direction::Right:
+                        if((int)mDirection.x!=1||(int)mDirection.y!=0)
+                        {
+                            mDirection.x=1;
+                            mDirection.y=0;
+                        }
+                        else
+                        {
+                            mDirection.x=-1;
+                            mDirection.y=0;
+                        }
+                        break;
                 }
                 mTravelledDistance = 0.f;
             }

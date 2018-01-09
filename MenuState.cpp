@@ -1,6 +1,8 @@
 #include "MenuState.hpp"
 #include "Utility.hpp"
 #include "ResourceHolder.hpp"
+#include "Player.hpp"
+
 
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/View.hpp>
@@ -24,16 +26,26 @@ MenuState::MenuState(StateStack& stack, Context context)
 	playOption.setPosition(context.window->getView().getSize() / 2.f);
 	mOptions.push_back(playOption);
 
+	sf::Text MapEditorOption;
+	MapEditorOption.setFont(font);
+	MapEditorOption.setString("Edit map");
+	centerOrigin(MapEditorOption);
+	MapEditorOption.setPosition(playOption.getPosition() + sf::Vector2f(0.f, 30.f));
+	mOptions.push_back(MapEditorOption);
+
 	sf::Text exitOption;
 	exitOption.setFont(font);
 	exitOption.setString("Exit");
 	centerOrigin(exitOption);
-	exitOption.setPosition(playOption.getPosition() + sf::Vector2f(0.f, 30.f));
+	exitOption.setPosition(MapEditorOption.getPosition() + sf::Vector2f(0.f, 30.f));
 	mOptions.push_back(exitOption);
 
 	updateOptionText();
 
 	context.music->play(Music::MenuTheme);
+
+	if(context.player!=nullptr)
+        context.player->resetLvl();
 }
 
 void MenuState::draw()
@@ -63,7 +75,16 @@ bool MenuState::handleEvent(const sf::Event& event)
 		if (mOptionIndex == Play)
 		{
 			requestStackPop();
+
 			requestStackPush(States::Game);
+			requestStackPush(States::NextLevel);
+		}
+		else if (mOptionIndex == MapEditor)
+		{
+			// The exit option was chosen, by removing itself, the stack will be empty, and the game will know it is time to close.
+			requestStackPop();
+			requestStackPush(States::MapEditor);
+
 		}
 		else if (mOptionIndex == Exit)
 		{

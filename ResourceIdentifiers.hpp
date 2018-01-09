@@ -26,6 +26,7 @@ namespace Textures
 		FireSpread,
 		TitleScreen,
 		Eagle,
+		Spawn
 
 	};
 }
@@ -43,6 +44,7 @@ namespace Music
 	{
 		MenuTheme,
 		MissionTheme,
+		NextLevelStateTheme,
 	};
 }
 namespace SoundEffect

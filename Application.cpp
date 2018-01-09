@@ -7,12 +7,14 @@
 #include "MenuState.hpp"
 #include "PauseState.hpp"
 #include "GameOverState.hpp"
+#include "NextLevelState.hpp"
+#include "MapEditorState.hpp"
 
 
 const sf::Time Application::TimePerFrame = sf::seconds(1.f/60.f);
 
 Application::Application()
-: mWindow(sf::VideoMode(1366, 768), "Tank 1.0", sf::Style::Close)
+: mWindow(sf::VideoMode(1366, 768), "Tank 1.0",  sf::Style::Fullscreen)
 , mTextures()
 , mFonts()
 , mPlayer()
@@ -114,4 +116,6 @@ void Application::registerStates()
 	mStateStack.registerState<PauseState>(States::Pause);
 //	mStateStack.registerState<SettingsState>(States::Settings);
 	mStateStack.registerState<GameOverState>(States::GameOver);
+	mStateStack.registerState<MapEditorState>(States::MapEditor);
+	mStateStack.registerState<NextLevelState>(States::NextLevel);
 }

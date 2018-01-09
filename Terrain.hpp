@@ -20,16 +20,19 @@ public:
         TypeCount,
         };
 public:
-                                        Terrain(Type type, const TextureHolder& textures);
+                                        Terrain(Type type, const TextureHolder& textures,int lvl);
     virtual unsigned int                getCategory() const;
     virtual sf::FloatRect               getBoundingRect() const;
+    Terrain::Type                       getType() const;
+    int                                 getLvl() const;
 
 protected:
     virtual void                        drawCurrent(sf::RenderTarget & target, sf::RenderStates states) const;
 
 private:
-    Type mType;
-    sf::Sprite mSprite;
+    Type                                mType;
+    int                                 mLvl;
+    sf::Sprite                          mSprite;
 };
 
 #endif // TERRAIN_HPP_INCLUDED

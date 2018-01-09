@@ -8,6 +8,7 @@ MusicPlayer::MusicPlayer()
 {
 	mFilenames[Music::MenuTheme]    = "Media/Audio/menu.ogg";
 	mFilenames[Music::MissionTheme] = "Media/Audio/game.ogg";
+	mFilenames[Music::NextLevelStateTheme] = "Media/Audio/pickup.ogg";
 }
 
 void MusicPlayer::play(Music::ID theme)

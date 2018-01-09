@@ -43,6 +43,10 @@ class Player
         void 					setMissionStatus(MissionStatus status);
 		MissionStatus 			getMissionStatus() const;
 		int                     getDirection();
+		int                     getCurrLvl() const;
+		void                    nextLvl();
+		void                    resetLvl();
+
 
 
 	private:
@@ -50,11 +54,13 @@ class Player
 		static bool				isRealtimeAction(Action action);
 
 
+
 	private:
 		std::map<sf::Keyboard::Key, Action>		mKeyBinding;
 		std::map<Action, Command>				mActionBinding;
 		MissionStatus 							mCurrentMissionStatus;
 		int                                     direction;
+		int                                     mCurrLvl;
 };
 
 

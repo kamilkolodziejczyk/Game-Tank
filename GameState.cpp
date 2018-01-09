@@ -20,7 +20,7 @@ bool GameState::update(sf::Time dt)
 {
 	mWorld.update(dt);
 
-	if(!mWorld.hasAlivePlayer())
+	if(!mWorld.hasAlivePlayer()||!mWorld.isEagleAlive())
 	{
 		mPlayer.setMissionStatus(Player::MissionFailure);
 		requestStackPush(States::GameOver);
@@ -30,6 +30,12 @@ bool GameState::update(sf::Time dt)
 		mPlayer.setMissionStatus(Player::MissionSuccess);
 		requestStackPush(States::GameOver);
 	}
+    else if(mWorld.isNextLvl())
+    {
+        mPlayer.nextLvl();
+        mWorld.nextLvl();
+        requestStackPush(States::NextLevel);
+    }
 
 	CommandQueue& commands = mWorld.getCommandQueue();
 	mPlayer.handleRealtimeInput(commands);

@@ -27,6 +27,7 @@ struct TankMover
 
 Player::Player()
 : mCurrentMissionStatus(MissionRunning)
+, mCurrLvl(1)
 {
 	// Set initial key bindings
 	mKeyBinding[sf::Keyboard::Left] = MoveLeft;
@@ -134,3 +135,16 @@ int Player::getDirection()
 {
     return direction;
 }
+int Player::getCurrLvl() const
+{
+    return mCurrLvl;
+}
+void Player::resetLvl()
+{
+    mCurrLvl=1;
+}
+
+ void Player::nextLvl()
+ {
+     ++mCurrLvl;
+ }

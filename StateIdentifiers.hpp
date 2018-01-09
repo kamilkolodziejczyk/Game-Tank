@@ -11,6 +11,8 @@ namespace States
 		Game,
 		Loading,
 		GameOver,
+		MapEditor,
+		NextLevel,
 		Pause
 	};
 }

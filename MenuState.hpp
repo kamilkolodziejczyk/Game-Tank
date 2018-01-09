@@ -23,6 +23,7 @@ class MenuState : public State
 		enum OptionNames
 		{
 			Play,
+			MapEditor,
 			Exit,
 		};
 
